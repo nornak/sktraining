@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>道訓 暗記トレーナー</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta name="theme-color" content="#126f7f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="道訓">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <style>
+    :root {
+      font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+      color: #172331;
+      background: #f4f7f8
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0
+    }
+
+    main {
+      max-width: 780px;
+      margin: auto;
+      padding: 24px 16px 65px
+    }
+
+    .muted {
+      color: #607080
+    }
+
+    .eyebrow {
+      letter-spacing: .16em;
+      font-size: 11px;
+      font-weight: 700;
+      color: #386b78
+    }
+
+    h1 {
+      font-size: 27px;
+      margin: 5px 0 4px
+    }
+
+    .small {
+      font-size: 12px
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #dbe2e6;
+      border-radius: 15px;
+      padding: 16px;
+      margin: 12px 0;
+      box-shadow: 0 1px 4px #17233108
+    }
+
+    .flex {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-wrap: wrap
+    }
+
+    .between {
+      justify-content: space-between
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid #cbd6da;
+      background: #fff;
+      border-radius: 9px;
+      color: #172331;
+      font-size: 14px;
+      font-weight: 650;
+      padding: 10px 13px;
+      cursor: pointer
+    }
+
+    .btn.primary {
+      background: #126f7f;
+      color: white;
+      border-color: #126f7f
+    }
+
+    .btn:disabled {
+      opacity: .45;
+      cursor: default
+    }
+
+    .btn.active {
+      background: #dff2f3;
+      border-color: #126f7f
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      margin: 18px 0
+    }
+
+    .tabs .btn {
+      padding: 10px 2px
+    }
+
+    .bar {
+      height: 9px;
+      background: #e8eef1;
+      border-radius: 15px;
+      overflow: hidden
+    }
+
+    .bar>div {
+      height: 100%;
+      background: #208897;
+      transition: width .2s
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      margin-top: 16px;
+      gap: 12px
+    }
+
+    .metric b {
+      font-size: 23px;
+      display: block
+    }
+
+    .metric span {
+      font-size: 11px;
+      color: #607080
+    }
+
+    .text {
+      font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+      font-size: 20px;
+      line-height: 2.25;
+      letter-spacing: .02em;
+      overflow-wrap: anywhere
+    }
+
+    .pill {
+      font-size: 11px;
+      background: #e9f1f2;
+      border-radius: 99px;
+      padding: 3px 9px;
+      color: #4c6873;
+      white-space: nowrap
+    }
+
+    .line {
+      border-bottom: 1px solid #e4e9eb;
+      padding: 12px 2px;
+      cursor: pointer
+    }
+
+    .line:last-child {
+      border: 0
+    }
+
+    .line .preview {
+      font-size: 14px;
+      line-height: 1.8;
+      margin-top: 3px
+    }
+
+    .conceal {
+      filter: blur(6px);
+      user-select: none
+    }
+
+    .input {
+      background: white;
+      border: 1px solid #bacbd0;
+      border-radius: 9px;
+      color: #172331;
+      padding: 12px;
+      width: 100%;
+      font: 16px/1.75 inherit;
+      min-height: 122px;
+      resize: vertical
+    }
+
+    .select {
+      padding: 9px 8px;
+      background: white;
+      border: 1px solid #cbd6da;
+      border-radius: 9px;
+      color: #172331;
+      max-width: 100%;
+      font-size: 13px
+    }
+
+    .hidden {
+      display: none !important
+    }
+
+    .answer {
+      background: #f4f9fa;
+      border-radius: 9px;
+      padding: 12px;
+      line-height: 1.85;
+      margin: 10px 0;
+      font-size: 14px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere
+    }
+
+    .correct {
+      color: #16724f
+    }
+
+    .wrong {
+      color: #b6473f
+    }
+
+    .cloze {
+      background: #dcecef;
+      color: transparent;
+      border-bottom: 2px dashed #338e9a;
+      user-select: none;
+      border-radius: 3px
+    }
+
+    .grading {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px
+    }
+
+    .grading .btn {
+      padding: 10px 2px;
+      font-size: 12px
+    }
+
+    a {
+      color: #126f7f
+    }
+
+    button:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: 2px solid #238fa0;
+      outline-offset: 2px
+    }
+
+    .hint {
+      border-left: 3px solid #c6dde0;
+      padding-left: 11px
+    }
+
+    .voice-state {
+      font-size: 12px;
+      color: #607080;
+      margin: 7px 0
+    }
+
+    .subheading {
+      font-size: 13px;
+      font-weight: 750;
+      color: #415865;
+      margin-bottom: 8px
+    }
+
+    .warn {
+      color: #b6473f
+    }
+
+    @media(min-width:650px) {
+      main {
+        padding-top: 33px
+      }
+
+      h1 {
+        font-size: 31px
+      }
+    }
+
+    @media(prefers-color-scheme:dark) {
+      :root {
+        background: #121b21;
+        color: #e7eef0
+      }
+
+      .card,
+      .btn,
+      .input,
+      .select {
+        background: #1d2b33;
+        color: #e7eef0;
+        border-color: #394f5a
+      }
+
+      .muted,
+      .metric span {
+        color: #a1b7be
+      }
+
+      .pill,
+      .answer {
+        background: #263b43;
+        color: #c6e0e5
+      }
+
+      .bar {
+        background: #364851
+      }
+
+      .line {
+        border-color: #33434c
+      }
+
+      .btn.active {
+        background: #264a52
+      }
+
+      .eyebrow {
+        color: #7cc3cc
+      }
+
+      .cloze {
+        background: #38545a
+      }
+
+      .hint {
+        border-color: #415c65
+      }
+
+      a {
+        color: #8fd3e0
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div class="eyebrow">SPACED RECALL · 道訓</div>
+    <h1>道訓 暗記トレーナー</h1>
+    <p class="muted small" style="margin:4px 0 16px">音読 → 思い出す → 答え合わせ → 間隔を空けて復習</p>
+    <div class="card">
+      <div class="flex between"><b>学習の定着度</b><span id="progressLabel">0%</span></div>
+      <div class="bar" style="margin-top:10px">
+        <div id="progress" style="width:0%"></div>
+      </div>
+      <div class="metrics">
+        <div class="metric"><b id="mastered">0</b><span>定着した区間</span></div>
+        <div class="metric"><b id="due">22</b><span>復習対象</span></div>
+        <div class="metric"><b id="streak">0</b><span>連続学習日数</span></div>
+      </div>
+    </div>
+    <nav class="tabs" aria-label="練習メニュー"><button class="btn active" data-tab="learn">読む・覚える</button><button class="btn"
+        data-tab="practice">思い出す</button><button class="btn" data-tab="stats">学習記録</button></nav>
+    <section id="learn">
+      <div class="flex between"><b>道訓 全22区間</b><label class="small"><input id="hideText" type="checkbox"> 本文を隠す</label>
+      </div>
+      <p class="small muted">区間をタップするとその場所からテストできます。最初は音読し、次に本文を隠して暗唱してください。</p>
+      <div class="card" id="list"></div><button class="btn primary" id="start" style="width:100%">今日の復習を始める</button>
+    </section>
+    <section id="practice" class="hidden">
+      <div class="flex" style="margin-bottom:12px"><select class="select" id="scope">
+          <option value="due">今日の復習を優先</option>
+          <option value="all">全文を順番に</option>
+          <option value="weak">苦手な区間を優先</option>
+        </select><select class="select" id="mode">
+          <option value="recite">暗唱テスト</option>
+          <option value="cloze">穴埋め</option>
+          <option value="type">文章入力</option>
+        </select></div>
+      <div class="flex between"><b id="qNum">区間 1 / 22</b><span class="pill" id="qStatus">未学習</span></div>
+      <div class="card">
+        <div id="prompt"></div>
+        <div id="response" style="margin-top:13px"></div>
+      </div>
+      <div id="gradePanel" class="hidden">
+        <p class="small muted">答えを確認して、現在の記憶に最も近いものを選んでください。</p>
+        <div class="grading"><button class="btn" data-grade="0">忘れた</button><button class="btn"
+            data-grade="1">難しい</button><button class="btn" data-grade="2">言えた</button><button class="btn"
+            data-grade="3">完璧</button></div>
+      </div>
+      <div class="flex between" style="margin-top:16px"><button class="btn" id="prev">← 前へ</button><span
+          class="small muted" id="sessionCounter"></span><button class="btn" id="next">次へ →</button></div>
+    </section>
+    <section id="stats" class="hidden">
+      <div class="card"><b>学習履歴のバックアップ</b>
+        <p class="small muted">進捗は現在使っているブラウザー内に保存されます。別の端末への移動やデータ消失に備え、ファイルに書き出せます。</p>
+        <div class="flex"><button class="btn primary" id="exportData">履歴を書き出す</button><label class="btn"
+            for="importData">履歴を読み込む</label><input id="importData" type="file" accept="application/json,.json"
+            style="display:none"></div>
+        <p class="small" id="backupStatus" role="status"></p>
+      </div>
+      <p class="small muted">この端末に学習履歴を保存します。正確に言えた区間は翌日・3日後・7日後・14日後・30日後を目安に復習します。</p>
+      <div id="statsList" class="card"></div><button id="reset" class="btn" style="width:100%">学習履歴をリセット</button>
+    </section>
+    <p class="small muted" id="saveNote">進捗はこのブラウザー内に保存されます。端末やホーム画面アプリの保存領域が分かれる場合があります。</p>
+    <p class="small muted">底本：<a target="_blank" rel="noopener"
+        href="https://byakuren.web5.jp/wp/%e8%81%96%e5%8f%a5%e3%83%bb%e8%aa%93%e9%a1%98%e3%83%bb%e7%a4%bc%e6%8b%9d%e8%a9%9e%e3%83%bb%e9%81%93%e8%a8%93%e3%83%bb%e4%bf%a1%e6%9d%a1">岡山大学少林寺拳法部・白蓮会「道訓」</a>。読みは学習用の参考表記です。読み方に揺れがある語については所属団体の指導を優先してください。
+    </p>
+  </main>
+  <script>
+    const annotated = ["道{みち}は天{てん}より生{しょう}じ、人{ひと}の共{とも}に由{よ}る所{ところ}とするものなり、", "その道{みち}を得{え}れば以{もっ}て進{すす}むべく、以{もっ}て守{まも}るべく、", "その道{みち}を失{しっ}すれば、即{すなわ}ち迷離{めいり}す、", "故{ゆえ}に道{みち}は、須叟{しゅゆ}も離{はな}るべからずと、いう所以{ゆえん}なり、", "人{ひと}生{う}まれて世{よ}にある時{とき}、人道{じんどう}を尽{つく}すを貴{とうと}ぶ、", "まさに人道{じんどう}に於{おい}て、はずる処{ところ}なくんば、天地{てんち}の間{あいだ}に立{た}つべし、", "若{も}し人{ひと}あり、仁{じん}、義{ぎ}、忠{ちゅう}、孝{こう}、礼{れい}の事{こと}を尽{つく}さざれば、", "身世{しんせ}に在{あ}りといえど雖{いえど}も、心{こころ}は既{すで}に死{し}せるなり、", "生{せい}を偸{ぬす}むものと云{い}うべし、", "凡{およ}そ人心{じんしん}は、即{すなわ}ち神{かみ}なり仏{ほとけ}なり、神仏{しんぶつ}即{すなわ}ち霊{れい}なり、", "心{こころ}にはずる処{ところ}なくば、神仏{しんぶつ}にもはずる処{ところ}なし、", "故{ゆえ}に一道一静{いちどういっせい}、総{すべ}て神仏{しんぶつ}の観察{かんさつ}する処{ところ}、", "報応昭々{ほうおうしょうしょう}として、豪厘{ごうりん}も赦{ゆる}さざるなり、", "故{ゆえ}に天地{てんち}を敬{うやま}い、神仏{しんぶつ}に礼{れい}し、祖先{そせん}を奉{ほう}じ、双親{そうしん}に孝{こう}に、", "国法{こくほう}を守{まも}り、師{し}を重{おも}んじ、兄弟{きょうだい}を愛{あい}し、朋友{ほうゆう}を信{しん}じ、", "宗族{そうぞく}相睦{あいむつ}み、郷党{きょうとう}相結{あいむす}び、夫婦{ふうふ}相和{あいわ}し、", "人{ひと}の難{なん}を救{すく}い、急{きゅう}を援{たす}け、訓{くん}を垂{た}れて人{ひと}を導{みちび}き、", "心{こころ}を至{いた}して道{みち}に向{むか}い、過{あやまち}を改{あらた}めて自{みずか}ら新{あらた}にし、", "悪念{あくねん}を断{た}ちて、一切{いっさい}の善事{ぜんじ}を、信心{しんじん}に奉行{ぶぎょう}すれば、", "人{ひと}見{み}ずと雖{いえど}も、神仏{しんぶつ}既{すで}に早{はや}く知{し}りて、", "福{ふく}を加{くわ}え、寿{じゅ}を増{ま}し、子孫{しそん}を益{えき}し、病{やま}い減{へ}り、", "過患{かかん}侵{おか}さず、ダーマの加護{かご}を得{え}られるべし。"];
+    const units = annotated.map(s => {const arr = []; const re = /([^{}]+)\{([^{}]+)\}|([^{}]+)/g; let m; while ((m = re.exec(s)) !== null) {if (m[1]) arr.push({surface: m[1], reading: m[2]}); else for (const ch of Array.from(m[3])) arr.push({surface: ch, reading: ch});} return arr;});
+    const parts = units.map(a => a.map(t => t.surface).join(''));
+    const readings = units.map(a => a.map(t => t.reading).join(''));
+    const $ = id => document.getElementById(id), esc = s => String(s).replace(/[&<>"']/g, x => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[x]));
+    const kana = s => s.normalize('NFKC').replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCodeAt(0) - 96));
+    const normalize = s => kana(s).replace(/[\s\u3000、。，．・「」『』!?！？]/g, '').toLowerCase();
+    function parseKey(s) {return normalize(s)}
+    function acceptingMixed(input, i) {
+      const target = parseKey(input); let candidates = new Set([0]);
+      for (const u of units[i]) {const opts = [parseKey(u.surface), parseKey(u.reading)]; const next = new Set(); for (const idx of candidates) for (const x of opts) if (target.startsWith(x, idx)) next.add(idx + x.length); candidates = next; if (!candidates.size) return false;} return candidates.has(target.length);
+    }
+    function distance(a, b) {let old = Array.from({length: b.length + 1}, (_, i) => i); for (let i = 1; i <= a.length; i++) {let row = [i]; for (let j = 1; j <= b.length; j++)row.push(Math.min(row[j - 1] + 1, old[j] + 1, old[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1))); old = row;} return old[b.length]}
+    function score(input, i) {const a = parseKey(input); if (!a) return 0; if (acceptingMixed(input, i)) return 100; return Math.max(0, Math.round(100 * (1 - Math.min(distance(a, parseKey(parts[i])), distance(a, parseKey(readings[i]))) / Math.max(1, a.length, parseKey(readings[i]).length))))}
+    const initial = () => ({cards: parts.map(() => ({level: 0, seen: 0, good: 0, again: 0, due: ''})), days: []});
+    let db = initial(); let storageOK = true; try {const raw = localStorage.getItem('dokun-memorizer-v2'); if (raw) {const obj = JSON.parse(raw); if (obj.cards?.length === parts.length) db = obj;} } catch (e) {storageOK = false}
+    const today = () => {const t = new Date(); return [t.getFullYear(), String(t.getMonth() + 1).padStart(2, '0'), String(t.getDate()).padStart(2, '0')].join('-')};
+    function after(n) {const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + n); return [d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-')}
+    const due = c => !c.seen || !c.due || c.due <= today();
+    const status = c => !c.seen ? '未学習' : due(c) ? '復習対象' : c.level >= 3 ? '定着中' : '練習中';
+    function persist() {try {localStorage.setItem('dokun-memorizer-v2', JSON.stringify(db))} catch (e) {storageOK = false} $('saveNote').textContent = storageOK ? '進捗はこのブラウザー内に保存されます。' : 'この環境では保存できない場合があります。ページを閉じると進捗が失われる可能性があります。';}
+    function header() {let total = db.cards.reduce((s, c) => s + Math.min(4, c.level), 0); const pct = Math.round(total / (parts.length * 4) * 100); $('progress').style.width = pct + '%'; $('progressLabel').textContent = pct + '%'; $('mastered').textContent = db.cards.filter(c => c.level >= 3).length; $('due').textContent = db.cards.filter(due).length; let streak = 0, d = new Date(); d.setHours(12, 0, 0, 0); if (!db.days.includes(today())) d.setDate(d.getDate() - 1); while (db.days.includes([d.getFullYear(), String(d.getMonth() + 1).padStart(2, '0'), String(d.getDate()).padStart(2, '0')].join('-'))) {streak++; d.setDate(d.getDate() - 1)} $('streak').textContent = streak;}
+    let tab = 'learn', index = 0, queue = [], pos = 0, revealed = false, answer = '', inputKind = 'keyboard', recognition = null, voiceError = '', recording = false;
+    function stopVoice() {if (recognition) {try {recognition.stop()} catch (e) { } recognition = null;} recording = false}
+    function switchTab(t) {tab = t; document.querySelectorAll('[data-tab]').forEach(b => b.classList.toggle('active', b.dataset.tab === t));['learn', 'practice', 'stats'].forEach(x => $(x).classList.toggle('hidden', x !== t)); header(); if (t === 'learn') drawLearn(); if (t === 'practice') drawQuestion(); if (t === 'stats') drawStats();}
+    function drawLearn() {$('list').innerHTML = parts.map((p, i) => '<div class="line" data-chunk="' + i + '" tabindex="0" role="button"><div class="flex between"><b class="small">第' + (i + 1) + '区間</b><span class="pill">' + status(db.cards[i]) + '</span></div><div class="preview ' + ($('hideText').checked ? 'conceal' : '') + '">' + esc(p) + '</div></div>').join(''); document.querySelectorAll('[data-chunk]').forEach(b => {const go = () => {$('scope').value = 'all'; makeQueue(Number(b.dataset.chunk)); switchTab('practice')}; b.onclick = go; b.onkeydown = e => {if (e.key === 'Enter') go();}})}
+    function makeQueue(start) {stopVoice(); const scope = $('scope').value; if (scope === 'all') queue = parts.map((_, i) => i); else if (scope === 'weak') queue = parts.map((_, i) => i).sort((a, b) => db.cards[a].level - db.cards[b].level || db.cards[b].again - db.cards[a].again || a - b); else {queue = parts.map((_, i) => i).filter(i => due(db.cards[i])); if (!queue.length) queue = parts.map((_, i) => i).sort((a, b) => (db.cards[a].due || '').localeCompare(db.cards[b].due || ''));} pos = start === undefined ? 0 : Math.max(0, queue.indexOf(start)); index = queue[pos] ?? 0; revealed = false; answer = ''; voiceError = '';}
+    function move(d) {stopVoice(); if (!queue.length) return; pos = (pos + d + queue.length) % queue.length; index = queue[pos]; revealed = false; answer = ''; voiceError = ''; drawQuestion()}
+    function drawQuestion() {
+      if (!queue.length) makeQueue(); const mode = $('mode').value, p = parts[index]; $('qNum').textContent = '区間 ' + (index + 1) + ' / ' + parts.length; $('qStatus').textContent = status(db.cards[index]); let prompt = '';
+      if (mode === 'cloze') {const fragments = p.split(/(、|。)/); let n = 0; prompt = '<div class="small muted">隠れている文節を思い出してください。</div><div class="text">' + fragments.map(f => {if (f === '、' || f === '。') return esc(f); let v = n++; return v % 3 === 0 ? esc(f) : '<span class="cloze">' + esc(f) + '</span>'}).join('') + '</div>'}
+      else {prompt = '<div class="small muted">' + (mode === 'recite' ? '前の区間を手がかりに、声に出すか文字で再現してください。' : '第' + (index + 1) + '区間の文章を入力してください。ひらがなでも正解になります。') + '</div><div class="text" style="margin-top:12px">' + (index === 0 ? '〈道訓の冒頭〉' : esc(parts[index - 1])) + '</div>'}
+      $('prompt').innerHTML = prompt;
+      let body = ''; if (mode !== 'cloze') {
+        body = '<div class="subheading">解答方法</div><div class="flex" style="margin-bottom:10px"><button class="btn ' + (inputKind === 'keyboard' ? 'active' : '') + '" data-input="keyboard">⌨ キーボード</button><button class="btn ' + (inputKind === 'voice' ? 'active' : '') + '" data-input="voice">🎙 音声入力</button></div>';
+        body += '<textarea id="answer" class="input" placeholder="漢字・ひらがな・カタカナ・混在でも入力できます" ' + (revealed ? 'readonly' : '') + '>' + esc(answer) + '</textarea>';
+        if (inputKind === 'voice' && !revealed) {body += '<div class="flex" style="margin-top:9px"><button class="btn ' + (recording ? 'active' : 'primary') + '" id="mic">' + (recording ? '■ 音声入力を終了' : '🎙 音声を認識') + '</button><span class="small muted">認識結果は上の欄で編集できます</span></div><div class="voice-state" id="voiceState">' + esc(voiceError || 'マイクの使用許可が必要です。ブラウザーによって利用できない場合があります。') + '</div>'}
+        if (!revealed) body += '<button class="btn primary" id="check" style="margin-top:10px;width:100%">答え合わせ</button>';
+      } else if (!revealed) body = '<button class="btn primary" id="check" style="width:100%">答えを表示</button>';
+      if (revealed) {
+        body += '<div class="subheading" style="margin-top:15px">原文</div><div class="answer">' + esc(p) + '</div><div class="subheading">読み仮名（参考）</div><div class="answer">' + esc(readings[index]) + '</div>';
+        if (mode !== 'cloze') body += '<div class="subheading">あなたの解答</div><div class="answer">' + esc(answer || '（未入力）') + '</div><p style="font-size:14px;font-weight:700" class="' + (score(answer, index) === 100 ? 'correct' : 'wrong') + '">' + (score(answer, index) === 100 ? '正解！ 読みが一致しています。' : '文字一致率（参考）：' + score(answer, index) + '%') + '</p><p class="small muted">混在入力も表記と読みを組み合わせて照合します。読みの揺れや音声認識の誤りがある場合は、下の自己評価を優先してください。</p>';
+      }
+      $('response').innerHTML = body; $('gradePanel').classList.toggle('hidden', !revealed); $('sessionCounter').textContent = (pos + 1) + ' / ' + queue.length + ' 問'; $('prev').disabled = pos === 0;
+      document.querySelectorAll('[data-input]').forEach(b => b.onclick = () => {stopVoice(); inputKind = b.dataset.input; voiceError = ''; const current = $('answer'); if (current) answer = current.value; drawQuestion()});
+      if ($('answer')) $('answer').addEventListener('input', e => answer = e.target.value);
+      if ($('mic')) $('mic').onclick = toggleMicrophone;
+      if ($('check')) $('check').onclick = () => {if ($('answer')) answer = $('answer').value; stopVoice(); revealed = true; drawQuestion()};
+    }
+    function toggleMicrophone() {
+      if (recording) {stopVoice(); drawQuestion(); return } const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition; if (!SpeechRecognition) {voiceError = 'このブラウザーは音声認識に対応していません。キーボード入力をご利用ください。'; drawQuestion(); return }
+      let r = new SpeechRecognition(); r.lang = 'ja-JP'; r.continuous = true; r.interimResults = true; recognition = r; recording = true; voiceError = '認識中です…'; let base = answer; r.onresult = e => {let combined = ''; for (let i = 0; i < e.results.length; i++)combined += e.results[i][0].transcript; const ta = $('answer'); if (ta) {ta.value = base + combined; answer = ta.value} }; r.onerror = e => {voiceError = '音声入力エラー：' + e.error + '。キーボード入力でも練習できます。'; recording = false; recognition = null; drawQuestion()}; r.onend = () => {recording = false; recognition = null; if (tab === 'practice' && !revealed) drawQuestion()}; try {r.start(); drawQuestion()} catch (e) {voiceError = '音声入力を開始できません。キーボード入力をご利用ください。'; stopVoice(); drawQuestion()}
+    }
+    function grade(g) {const c = db.cards[index]; c.seen++; if (g <= 1) {c.again++; c.level = g === 0 ? 0 : Math.max(0, c.level - 1); c.due = g === 0 ? today() : after(1)} else {c.good++; c.level = Math.min(5, c.level + (g === 3 ? 2 : 1)); c.due = after([0, 1, 3, 7, 14, 30][c.level]);} if (!db.days.includes(today())) db.days.push(today()); persist(); header(); if (g === 0 && $('scope').value !== 'all' && queue.length > 1) queue.splice(pos + 1, 0, index); move(1)}
+    function drawStats() {$('statsList').innerHTML = db.cards.map((c, i) => '<div class="line" data-stat="' + i + '"><div class="flex between"><b class="small">第' + (i + 1) + '区間</b><span class="pill">' + (c.seen ? (due(c) ? '復習対象' : '次回 ' + c.due) : '未学習') + '</span></div><div class="bar" style="margin:8px 0"><div style="width:' + (c.level / 5 * 100) + '%"></div></div><div class="small muted">成功 ' + c.good + '回 · 要復習 ' + c.again + '回</div></div>').join(''); document.querySelectorAll('[data-stat]').forEach(b => b.onclick = () => {$('scope').value = 'all'; makeQueue(Number(b.dataset.stat)); switchTab('practice')})}
+    document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => {if (b.dataset.tab === 'practice' && !queue.length) makeQueue(); switchTab(b.dataset.tab)}); $('hideText').onchange = drawLearn; $('start').onclick = () => {$('scope').value = 'due'; makeQueue(); switchTab('practice')}; $('scope').onchange = () => {makeQueue(); drawQuestion()}; $('mode').onchange = () => {stopVoice(); revealed = false; answer = ''; drawQuestion()}; $('prev').onclick = () => move(-1); $('next').onclick = () => move(1); document.querySelectorAll('[data-grade]').forEach(b => b.onclick = () => grade(Number(b.dataset.grade))); $('exportData').onclick = () => {
+      const payload = {format: 'dokun-trainer-backup', version: 1, exportedAt: new Date().toISOString(), data: db};
+      const file = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+      const url = URL.createObjectURL(file), a = document.createElement('a'); a.href = url; a.download = 'dokun-progress-' + today() + '.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+      $('backupStatus').textContent = 'バックアップファイルを作成しました。';
+    };
+    $('importData').onchange = async e => {
+      const f = e.target.files?.[0]; if (!f) return;
+      try {
+        const obj = JSON.parse(await f.text());
+        if (obj.format !== 'dokun-trainer-backup' || obj.version !== 1 || !Array.isArray(obj.data?.cards) || obj.data.cards.length !== parts.length || !Array.isArray(obj.data.days)) throw new Error('形式が正しくありません');
+        if (!confirm('現在の学習履歴をバックアップの内容で置き換えますか？')) return;
+        db = obj.data; persist(); header(); makeQueue(); drawStats(); $('backupStatus').textContent = '学習履歴を読み込みました。';
+      } catch (err) {$('backupStatus').textContent = '読み込み失敗：' + err.message;} finally {e.target.value = '';}
+    };
+    $('reset').onclick = () => {if (confirm('学習履歴をすべて削除しますか？')) {db = initial(); persist(); makeQueue(); switchTab('stats')} };
+    makeQueue(); persist(); switchTab('learn');
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => { }));
+    }
+
+  </script>
+</body>
+
+</html>
