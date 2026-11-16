@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "道訓 暗記トレーナー",
-  "short_name": "道訓",
-  "description": "道訓の暗記・入力テスト・音声認識・間隔反復練習",
+  "name": "少林寺拳法 学習メニュー",
+  "short_name": "少林寺拳法",
+  "description": "少林寺拳法の章別練習と道訓の暗記",
   "lang": "ja",
   "start_url": "./",
   "scope": "./",

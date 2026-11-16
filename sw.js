@@ -1,6 +1,44 @@
-const CACHE='dokun-offline-v1';
-const ASSETS=['./','./index.html','./manifest.webmanifest','./icon-192.png','./icon-512.png'];
-self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)).then(()=>self.skipWaiting())));
-self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
-self.addEventListener('fetch',event=>{if(event.request.method!=='GET')return;const url=new URL(event.request.url);if(url.origin!==location.origin)return;
-event.respondWith(fetch(event.request).then(response=>{if(response.ok){const copy=response.clone();caches.open(CACHE).then(c=>c.put(event.request,copy));}return response;}).catch(()=>caches.match(event.request).then(r=>r||caches.match('./index.html'))));});
+const CACHE = 'sktraining-offline-v3';
+const ASSETS = [
+  './',
+  './index.html',
+  './dokun.html',
+  './practice.html',
+  './practice-data.js',
+  './study.js',
+  './study.css',
+  './manifest.webmanifest',
+  './icon-192.png',
+  './icon-512.png',
+];
+const ASSET_URLS = new Set(ASSETS.map((asset) => new URL(asset, self.registration.scope).href));
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(caches.keys().then((keys) => Promise.all(
+    keys.filter((key) => key === 'dokun-offline-v1' ||
+      (key.startsWith('sktraining-offline-') && key !== CACHE))
+      .map((key) => caches.delete(key)),
+  )).then(() => self.clients.claim()));
+});
+
+self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+  url.search = '';
+  if (request.method !== 'GET' || !ASSET_URLS.has(url.href)) return;
+
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE);
+    try {
+      const response = await fetch(request);
+      if (response.ok) await cache.put(url.href, response.clone()).catch(() => {});
+      return response;
+    } catch {
+      return (await cache.match(url.href)) || Response.error();
+    }
+  })());
+});

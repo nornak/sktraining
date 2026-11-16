@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#126f7f">
+  <title>章別練習 | 少林寺拳法</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./study.css">
+  <script defer src="./practice-data.js"></script>
+  <script defer src="./study.js"></script>
+</head>
+<body>
+  <main>
+    <nav aria-label="ページ移動"><a href="./">← トップメニュー</a></nav>
+    <h1 id="book-title">章別練習</h1>
+    <noscript><p>章別練習を使うにはJavaScriptを有効にしてください。</p></noscript>
+    <p id="unavailable" hidden>トップメニューから練習する編を選んでください。</p>
+    <section id="chapter-menu" hidden aria-labelledby="choose-chapter">
+      <h2 id="choose-chapter" tabindex="-1">章を選ぶ</h2>
+      <p>答えを思い出してから解答例を表示し、どのくらい覚えていたか確認しましょう。</p>
+      <div id="chapters" class="menu"></div>
+    </section>
+    <section id="quiz" hidden aria-labelledby="chapter-title">
+      <button class="text-button" type="button" data-chapters>← 章を選ぶ</button>
+      <h2 id="chapter-title"></h2>
+      <article class="card" aria-labelledby="prompt">
+        <p id="position" class="question-meta"></p>
+        <h3 id="prompt" tabindex="-1"></h3>
+        <form id="answer-form" hidden aria-labelledby="prompt">
+          <p id="answer-instructions">漢字かひらがなで、1欄に1つずつ入力してください。順番は自由です。</p>
+          <div id="answer-fields"></div>
+          <button id="grade" type="submit">判定する</button>
+          <p id="grade-summary" role="status"></p>
+        </form>
+        <button id="reveal" type="button" aria-controls="answer-panel">解答例を見る</button>
+        <div id="answer-panel" hidden>
+          <h4 id="answer-heading" tabindex="-1">解答例</h4>
+          <p id="topic" class="question-meta"></p>
+          <p id="answer"></p>
+          <div class="actions" id="self-assessment">
+            <button type="button" id="remembered">覚えていた</button>
+            <button type="button" id="review" class="secondary">もう一度練習する</button>
+          </div>
+          <button id="continue" type="button" hidden>次へ</button>
+        </div>
+      </article>
+    </section>
+    <section id="result" class="card" hidden aria-labelledby="result-title">
+      <h2 id="result-title" tabindex="-1">練習結果</h2>
+      <p id="result-summary"></p>
+      <div class="actions">
+        <button type="button" id="retry">復習する問題だけ解き直す</button>
+        <button type="button" id="restart" class="secondary">章の最初から練習する</button>
+        <button type="button" class="secondary" data-chapters>章を選ぶ</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
