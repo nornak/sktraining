@@ -119,3 +119,46 @@ button:hover { background: #0d5c69; }
 }
 
 #grade-summary:not(:empty) { margin-top: 16px; font-weight: 700; }
+
+.waza-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+#waza-study select,
+#waza-search {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px 8px;
+  border: 1px solid #647985;
+  border-radius: 8px;
+  background: white;
+  color: inherit;
+  font: inherit;
+}
+
+#waza-hide-settings {
+  margin: 0 0 16px;
+  padding: 8px 12px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+#waza-hide-fields label { cursor: pointer; }
+#waza-position { margin: 0; }
+#waza-name { margin: 4px 0 14px; overflow-wrap: anywhere; }
+.waza-field { padding: 10px 0; border-top: 1px solid var(--border); }
+.waza-field > :first-child { display: block; color: var(--muted); font-size: .875rem; font-weight: 700; }
+.waza-field-result { color: #8d331d; }
+.waza-field-result[data-correct="true"] { color: #126451; }
+#waza-form .actions:has(button:not([hidden])) { margin-top: 10px; }
+#waza-feedback { margin: 12px 0 0; font-weight: 700; }
+#waza-feedback:empty { display: none; }
+.waza-navigation { justify-content: space-between; margin-top: 12px; }
+.waza-navigation button:disabled { opacity: .45; cursor: default; }
+
+.waza-search, .waza-search-results { margin-bottom: 16px; }

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#126f7f">
+  <title>技を覚える | 少林寺拳法</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="stylesheet" href="./study.css">
+  <script defer src="./study.js"></script>
+  <script defer src="./waza-data.js"></script>
+  <script defer src="./waza.js"></script>
+</head>
+<body>
+  <main>
+    <nav aria-label="ページ移動"><a href="./">← トップメニュー</a></nav>
+    <h1>技を覚える</h1>
+    <noscript><p>技の練習にはJavaScriptを有効にしてください。</p></noscript>
+    <div id="waza-study" hidden>
+      <div class="waza-search">
+        <label for="waza-search">拳の名前で検索</label>
+        <input type="search" id="waza-search" placeholder="例：逆小手、ぎゃくごて" enterkeyhint="search">
+      </div>
+      <div class="waza-filters" aria-label="練習設定">
+        <label>学習モード
+          <select id="waza-mode">
+            <option value="view">全項目を見る</option>
+            <option value="recall">一部を隠す</option>
+            <option value="quiz">選択して答える</option>
+          </select>
+        </label>
+        <label>拳系
+          <select id="waza-group"><option value="">すべて</option></select>
+        </label>
+        <label>級・段
+          <select id="waza-rank"><option value="">すべて</option></select>
+        </label>
+      </div>
+      <fieldset id="waza-hide-settings" hidden>
+        <legend>隠す項目</legend>
+        <div id="waza-hide-fields" class="actions"></div>
+      </fieldset>
+      <p id="waza-description" class="question-meta" hidden></p>
+      <div class="waza-search-results" id="waza-search-results" hidden>
+        <label for="waza-matches">検索結果</label>
+        <select id="waza-matches"></select>
+      </div>
+      <p id="waza-empty" role="status" hidden>この条件に該当する技はありません。</p>
+      <article id="waza-card" class="card" aria-labelledby="waza-name">
+        <p id="waza-position" class="question-meta"></p>
+        <h2 id="waza-name" tabindex="-1"></h2>
+        <form id="waza-form">
+          <div id="waza-fields"></div>
+          <div class="actions">
+            <button id="waza-reveal" type="button" class="secondary" hidden>隠した項目を表示</button>
+            <button id="waza-grade" type="submit" hidden>答え合わせ</button>
+          </div>
+          <p id="waza-feedback" role="status"></p>
+        </form>
+      </article>
+      <div id="waza-navigation" class="actions waza-navigation">
+        <button id="waza-prev" type="button" class="secondary">前の技</button>
+        <button id="waza-next" type="button">次の技</button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
