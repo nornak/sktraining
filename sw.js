@@ -1,4 +1,4 @@
-const CACHE = 'sktraining-offline-v7';
+const CACHE = 'sktraining-offline-v8';
 const ASSETS = [
   './',
   './index.html',
