@@ -9,6 +9,7 @@
   <link rel="apple-touch-icon" href="./icon-192.png">
   <link rel="stylesheet" href="./study.css">
   <script defer src="./practice-data.js"></script>
+  <script defer src="./exam-data.js"></script>
   <script defer src="./study.js"></script>
 </head>
 <body>
@@ -16,6 +17,7 @@
     <nav aria-label="ページ移動"><a href="./">← トップメニュー</a></nav>
     <h1 id="book-title">章別練習</h1>
     <noscript><p>章別練習を使うにはJavaScriptを有効にしてください。</p></noscript>
+    <p id="exam-note" hidden>写真の初段試験対策資料に沿った練習です。解答例は既存教材をもとに作成しています。空欄補充は出題範囲から作った練習問題です。記述・論述は解答例と比較して自己評価します。配点は資料の参考情報で、点数の自動採点は行いません。</p>
     <p id="unavailable" hidden>トップメニューから練習する編を選んでください。</p>
     <section id="chapter-menu" hidden aria-labelledby="choose-chapter">
       <h2 id="choose-chapter" tabindex="-1">章を選ぶ</h2>
@@ -28,6 +30,12 @@
       <article class="card" aria-labelledby="prompt">
         <p id="position" class="question-meta"></p>
         <h3 id="prompt" tabindex="-1"></h3>
+        <div id="written-panel" hidden>
+          <label for="written-answer">あなたの解答</label>
+          <textarea id="written-answer" rows="6" placeholder="自分の言葉で書いてみましょう"></textarea>
+          <p id="written-count" class="question-meta" role="status"></p>
+        </div>
+        <p id="word-bank" class="question-meta" hidden></p>
         <form id="answer-form" hidden aria-labelledby="prompt">
           <p id="answer-instructions">漢字かひらがなで、1欄に1つずつ入力してください。順番は自由です。</p>
           <div id="answer-fields"></div>

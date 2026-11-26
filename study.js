@@ -28,6 +28,11 @@ function setupPractice(book) {
   const gradeButton = byId('grade');
   const gradeSummary = byId('grade-summary');
   const continueButton = byId('continue');
+  const writtenAnswer = byId('written-answer');
+  writtenAnswer.addEventListener('input', () => {
+    byId('written-count').textContent = `${Array.from(writtenAnswer.value).length}文字`;
+  });
+  byId('exam-note').hidden = book.id !== 'exam';
   let needsReview;
   let chapter;
   let queue;
@@ -46,17 +51,28 @@ function setupPractice(book) {
     byId('topic').textContent = question.topic;
     byId('prompt').textContent = question.prompt;
     byId('answer').textContent = question.answer;
+    byId('written-panel').hidden = !question.written;
+    writtenAnswer.value = '';
+    writtenAnswer.rows = question.essay ? 12 : 6;
+    byId('written-count').textContent = '0文字';
+    byId('word-bank').hidden = !question.wordBank;
+    byId('word-bank').textContent = question.wordBank ? `語群：${question.wordBank.join(' ／ ')}` : '';
+    byId('answer-instructions').textContent = question.grouped
+      ? '力を上の3欄、精神を下の2欄に入力してください。各組の中は順不同です。'
+      : question.ordered ? '空欄の番号に対応する答えを入力してください。'
+      : '漢字かひらがなで、1欄に1つずつ入力してください。順番は自由です。';
     const acceptsInput = Boolean(question.acceptedAnswers);
     reveal.hidden = acceptsInput;
     answerForm.hidden = !acceptsInput;
     byId('self-assessment').hidden = acceptsInput;
     continueButton.hidden = true;
-    if (acceptsInput) prepareAnswerFields(question.acceptedAnswers);
+    if (acceptsInput) prepareAnswerFields(question);
     answerPanel.hidden = true;
     byId('prompt').focus();
   }
 
-  function prepareAnswerFields(acceptedAnswers) {
+  function prepareAnswerFields(question) {
+    const { acceptedAnswers } = question;
     answerFields.replaceChildren();
     gradeButton.hidden = false;
     gradeSummary.textContent = '';
@@ -69,7 +85,7 @@ function setupPractice(book) {
       input.autocomplete = 'off';
       input.setAttribute('aria-describedby', `answer-instructions answer-status-${index}`);
       label.htmlFor = input.id;
-      label.textContent = `${index + 1}つ目`;
+      label.textContent = question.labels?.[index] || (question.ordered ? `（${index + 1}）` : `${index + 1}つ目`);
       status.id = `answer-status-${index}`;
       row.append(label, input, status);
       answerFields.append(row);
@@ -80,11 +96,15 @@ function setupPractice(book) {
     event.preventDefault();
     if (gradeButton.hidden) return;
 
-    const acceptedAnswers = queue[index].acceptedAnswers;
+    const question = queue[index];
+    const acceptedAnswers = question.acceptedAnswers;
     const matched = new Set();
-    for (const input of answerFields.querySelectorAll('input')) {
+    for (const [fieldIndex, input] of [...answerFields.querySelectorAll('input')].entries()) {
       const value = input.value.normalize('NFKC').replace(/\s+/gu, '');
-      const match = acceptedAnswers.find((forms) => forms.includes(value));
+      const candidates = question.grouped
+        ? (fieldIndex < question.grouped[0] ? acceptedAnswers.slice(0, question.grouped[0]) : acceptedAnswers.slice(question.grouped[0]))
+        : question.ordered ? [acceptedAnswers[fieldIndex]] : acceptedAnswers;
+      const match = candidates.find((forms) => forms.includes(value));
       const status = input.nextElementSibling;
       if (!value) {
         status.textContent = '未入力';
