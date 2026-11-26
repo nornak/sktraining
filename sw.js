@@ -1,4 +1,4 @@
-const CACHE = 'sktraining-offline-v8';
+const CACHE = 'sktraining-offline-v9';
 const ASSETS = [
   './',
   './index.html',
@@ -8,6 +8,7 @@ const ASSETS = [
   './waza.js',
   './practice.html',
   './practice-data.js',
+  './exam-data.js',
   './study.js',
   './study.css',
   './manifest.webmanifest',
